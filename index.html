@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Internship Recommendation Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <select id="languageSelect" class="form-control" style="width: auto; min-width: 120px;" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="te">తెలుగు</option>
+            <option value="bn">বাংলা</option>
+            <option value="ta">தமிழ்</option>
+            <option value="mr">मराठी</option>
+        </select>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="screen active">
+        <div class="container">
+            <div class="welcome-content">
+                <div class="welcome-icon">🎯</div>
+                <h1 id="welcomeTitle">Welcome to PM Internship Recommendations</h1>
+                <p id="welcomeDesc">Find the perfect internship opportunities tailored just for you</p>
+                <button id="startBtn" class="btn btn--primary btn--lg btn--full-width" onclick="startApplication()">
+                    <span id="startText">Start Now</span> →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Form -->
+    <div id="profileForm" class="screen hidden">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="form-step" id="step1">
+                <h2 id="personalInfoTitle">Personal Information</h2>
+                <div class="form-group">
+                    <label class="form-label" id="nameLabel">Full Name</label>
+                    <input type="text" id="candidateName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" id="ageLabel">Age</label>
+                    <input type="number" id="candidateAge" class="form-control" min="18" max="30" required>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="nextStep()">
+                    <span id="nextBtn1">Next</span> →
+                </button>
+            </div>
+
+            <div class="form-step hidden" id="step2">
+                <h2 id="educationTitle">Education Background</h2>
+                <div class="form-group">
+                    <label class="form-label" id="educationLabel">Education Level</label>
+                    <select id="educationLevel" class="form-control" required>
+                        <option value="">Select Education Level</option>
+                        <option value="12th Pass">12th Pass</option>
+                        <option value="ITI">ITI</option>
+                        <option value="Polytechnic">Polytechnic</option>
+                        <option value="Graduation">Graduation</option>
+                        <option value="Commerce Graduate">Commerce Graduate</option>
+                        <option value="Engineering/Graduation">Engineering/Graduation</option>
+                        <option value="Engineering/IT Graduate">Engineering/IT Graduate</option>
+                        <option value="12th Pass/ITI">12th Pass/ITI</option>
+                        <option value="12th Pass/ANM">12th Pass/ANM</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--secondary" onclick="prevStep()">
+                        ← <span id="backBtn1">Back</span>
+                    </button>
+                    <button class="btn btn--primary" onclick="nextStep()">
+                        <span id="nextBtn2">Next</span> →
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-step hidden" id="step3">
+                <h2 id="skillsTitle">Your Skills</h2>
+                <p id="skillsDesc">Select skills you have (choose at least 3)</p>
+                <div class="skills-grid" id="skillsGrid">
+                    <!-- Skills will be populated by JavaScript -->
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--secondary" onclick="prevStep()">
+                        ← <span id="backBtn2">Back</span>
+                    </button>
+                    <button class="btn btn--primary" onclick="nextStep()">
+                        <span id="nextBtn3">Next</span> →
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-step hidden" id="step4">
+                <h2 id="sectorsTitle">Sector Interests</h2>
+                <p id="sectorsDesc">Which sectors interest you? (choose at least 2)</p>
+                <div class="sectors-grid" id="sectorsGrid">
+                    <!-- Sectors will be populated by JavaScript -->
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--secondary" onclick="prevStep()">
+                        ← <span id="backBtn3">Back</span>
+                    </button>
+                    <button class="btn btn--primary" onclick="nextStep()">
+                        <span id="nextBtn4">Next</span> →
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-step hidden" id="step5">
+                <h2 id="locationTitle">Location Preference</h2>
+                <div class="form-group">
+                    <label class="form-label" id="locationLabel">Preferred City</label>
+                    <select id="locationPreference" class="form-control" required>
+                        <option value="">Select Preferred City</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn--secondary" onclick="prevStep()">
+                        ← <span id="backBtn4">Back</span>
+                    </button>
+                    <button class="btn btn--primary" onclick="generateRecommendations()">
+                        <span id="findBtn">Find Internships</span> 🔍
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Screen -->
+    <div id="processingScreen" class="screen hidden">
+        <div class="container">
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <h2 id="processingTitle">Finding Your Perfect Internships...</h2>
+                <p id="processingDesc">Please wait while we match your profile with available opportunities</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen hidden">
+        <div class="container">
+            <h2 id="resultsTitle">Your Recommended Internships</h2>
+            <p id="resultsDesc">Here are the top matches based on your profile</p>
+            
+            <div id="recommendationsContainer" class="recommendations-container">
+                <!-- Recommendations will be populated here -->
+            </div>
+            
+            <div class="results-actions">
+                <button class="btn btn--secondary btn--full-width" onclick="searchAgain()">
+                    <span id="searchAgainBtn">Search Again</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed View Modal -->
+    <div id="detailModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="detailTitle">Internship Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Details will be populated here -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--primary btn--full-width" onclick="applyToInternship()">
+                    <span id="applyNowBtn">Apply Now</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-toast hidden">
+        <span id="successText">Application submitted successfully!</span>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="error-toast hidden">
+        <span id="errorText">Please fill all required fields</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
